@@ -7,6 +7,8 @@ from pages.veiculos import VeiculosPage
 from pages.clientes import ClientesPage
 from pages.config import ConfigPage
 
+
+
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
