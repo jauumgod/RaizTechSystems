@@ -1,4 +1,6 @@
 import customtkinter as ctk
+from app.services import user_service
+
 
 class LoginPage(ctk.CTkFrame):
     def __init__(self, parent, controller):
@@ -57,22 +59,20 @@ class LoginPage(ctk.CTkFrame):
         # Foco inicial
         self.user_entry.focus()
 
-    def tentar_login(self):
-        user = self.user_entry.get()
-        senha = self.pass_entry.get()
+    def fazer_login(self, user, password):
+        login_sucesso = False
+        try:
+            login_sucesso = user_service.AuthUser.login_user(user, password)
+        except Exception as e:
+            print("Erro ao fazer login: ", e)
 
-        if user == "joao" and senha == "123":
-            self.msg_label.configure(text="")
-            self.login_btn.configure(state="disabled")
-            self.user_entry.configure(state="disabled")
-            self.pass_entry.configure(state="disabled")
-
-            # Mostrar loading
-            self.loading_label.pack()
-            self.loading_steps = 0
-            self.loading_animar()
+        if login_sucesso:
+            self.controller.show_page(self.controller.pages['dashboard'])
         else:
-            self.msg_label.configure(text="Usuário ou senha incorretos!")
+            self.msg_label.configure(text="Usuario ou senha incorretos")
+            self.loading_label.pack_forget()
+        
+        
 
     def loading_animar(self):
         dots = "." * (self.loading_steps % 4)
